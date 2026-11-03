@@ -1,4 +1,4 @@
-:::writing_block::document id="62841" title="کد صفحه اصلی کتابخانه نورالله"}
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -58,8 +58,8 @@ h2 {
     color: #17365d;
 }
 .books {
-    display: grid;
-    grid-template-columns: repeat(3, 220px);
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: stretch;
     gap: 20px;
@@ -162,30 +162,7 @@ footer {
     text-align: center;
     line-height: 2;
 }
-#bookMenu {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 8px;
-    width: 100%;
-    margin-top: 12px;
-}
-
-#bookMenu button {
-    flex: 1;
-    min-width: 0;
-    padding: 10px 5px;
-    border: none;
-    border-radius: 8px;
-    background-color: #2878c8;
-    color: white;
-    font-family: Tahoma, sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-}  
-</>
+</style>
 </head>
 
 <body>
@@ -212,71 +189,49 @@ onkeyup="searchBooks()">
 
 <div class="books" id="bookList">
 
-    <!-- کتاب اول -->
-    <div class="book">
-        <h3>کتاب اول - مداحی</h3>
-        <p>معرفی کتاب اول</p>
-        <a href="madahi.pdf" target="_blank">مشاهده کتاب</a>
-    </div>
 
-    <!-- کتاب دوم -->
-    <div class="book">
-        <h3>کتاب دوم - یوسف</h3>
+<div class="book">
+<h3>کتاب اول - مداحی</h3>
+<p>معرفی کتاب اول</p>
+<a href="madahi.pdf" target="_blank">مشاهده کتاب</a>
+</div>
 
-        <div class="book-3d">
-            <div class="book-cover">
-                <div class="cover-title">
-                    منظومه قصص قرآنی
-                </div>
+<div class="book">
+    <h3>کتاب دوم - یوسف</h3>
 
-                <div class="cover-subtitle">
-                    به انضمام حکایت‌های عبرت‌انگیز
-                </div>
-
-                <div class="cover-author">
-                    سید نورالله شنایی دیباجی
-                </div>
+    <div class="book-3d">
+        <div class="book-cover">
+            <div class="cover-title">
+                منظومه قصص قرآنی
             </div>
+            <div class="cover-subtitle">
+                به انضمام حکایت‌های عبرت‌انگیز
+            </div>
+            <div class="cover-author">
+                سید نورالله شنایی دیباجی
+          
+    </div>
+      </div>
+</div>
+
+<p>مجموعه داستان‌های قرآنی و حکایت‌های عبرت‌انگیز</p>
+
+<a href="yousof.pdf" target="_blank">مشاهده کتاب</a>
+</div>
         </div>
-
-        <p>مجموعه داستان‌های قرآنی و حکایت‌های عبرت‌انگیز</p>
-
-        <button type="button" onclick="toggleBookMenu()">
-            معرفی کتاب
-        </button>
-
-       <div id="bookMenu" style="display: none;">
-
-    <button type="button" onclick="showBookSection('intro')">
-        عنوان کتاب
-    </button>
-
-    <button type="button" onclick="showBookSection('preface')">
-        پیشگفتار
-    </button>
-
-    <button type="button" onclick="showBookSection('contents')">
-        فهرست مطالب
-    </button>
-
-</div>
-
-        <a href="yousof.pdf" target="_blank">
-            مشاهده کتاب PDF
-        </a>
     </div>
 
-    <!-- کتاب سوم -->
-    <div class="book">
-        <h3>کتاب سوم</h3>
-        <p>معرفی کتاب سوم</p>
-        <button>مشاهده کتاب</button>
-    </div>
+    <p>مجموعه داستان‌های قرآنی و حکایت‌های عبرت‌انگیز</p>
+
+    <a href="yousof.pdf" target="_blank">مشاهده کتاب</a>
+</div>
+<div class="book">
+<h3>کتاب سوم</h3>
+<p>معرفی کتاب سوم</p>
+<button>مشاهده کتاب</button>
+</div>
 
 </div>
-<footer id="about">
-    <p>کتابخانه الکترونیکی نورالله</p>
-    <p>دانش، چراغ راه زندگی است.</p>
 
 <footer id="about">
 <p>کتابخانه الکترونیکی نورالله</p>
@@ -300,21 +255,10 @@ function searchBooks() {
 }
 
 </script>
-<script>
-function toggleBookMenu() {
-    var menu = document.getElementById("bookMenu");
-
-    if (menu.style.display === "none") {
-        menu.style.display = "flex";
-    } else {
-        menu.style.display = "none";
-    }
-}
-</script>
-</body>
-</html>
 <h3>📖 کتاب مداحی</h3>
 <iframe src="madahi.pdf" width="100%" height="600" style="border:1px solid #ccc;"></iframe>
 
 <h3>📖 کتاب یوسف</h3>
 <iframe src="yousof.pdf" width="100%" height="600" style="border:1px solid #ccc;"></iframe>
+</body>
+</html>
