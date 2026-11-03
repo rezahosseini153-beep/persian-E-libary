@@ -189,52 +189,59 @@ onkeyup="searchBooks()">
 
 <div class="books" id="bookList">
 
+    <!-- کتاب اول -->
     <div class="book">
         <h3>کتاب اول - مداحی</h3>
         <p>معرفی کتاب اول</p>
         <a href="madahi.pdf" target="_blank">مشاهده کتاب</a>
     </div>
 
+    <!-- کتاب دوم -->
     <div class="book">
-    <h3>کتاب دوم - یوسف</h3>
+        <h3>کتاب دوم - یوسف</h3>
 
-    <div class="book-3d">
-        <div class="book-cover">
-            <div class="cover-title">
-                منظومه قصص قرآنی
-            </div>
+        <div class="book-3d">
+            <div class="book-cover">
+                <div class="cover-title">
+                    منظومه قصص قرآنی
+                </div>
 
-            <div class="cover-subtitle">
-                به انضمام حکایت‌های عبرت‌انگیز
-            </div>
+                <div class="cover-subtitle">
+                    به انضمام حکایت‌های عبرت‌انگیز
+                </div>
 
-            <div class="cover-author">
-                سید نورالله شنایی دیباجی
+                <div class="cover-author">
+                    سید نورالله شنایی دیباجی
+                </div>
             </div>
         </div>
+
+        <p>مجموعه داستان‌های قرآنی و حکایت‌های عبرت‌انگیز</p>
+
+        <button type="button" onclick="toggleBookMenu()">
+            معرفی کتاب
+        </button>
+
+        <div id="bookMenu" style="display: none;">
+            <button type="button" onclick="showBookSection('intro')">
+                عنوان کتاب
+            </button>
+
+            <button type="button" onclick="showBookSection('preface')">
+                پیشگفتار
+            </button>
+
+            <button type="button" onclick="showBookSection('contents')">
+                فهرست مطالب
+            </button>
+        </div>
+
+        <a href="yousof.pdf" target="_blank">
+            مشاهده کتاب PDF
+        </a>
     </div>
 
-    <p>مجموعه داستان‌های قرآنی و حکایت‌های عبرت‌انگیز</p>
-
-  <button type="button" onclick="toggleBookMenu()">
-    معرفی کتاب
-</button>
-
-<div id="bookMenu" style="display: none;">
-    <button type="button" onclick="showBookSection('intro')">
-        عنوان کتاب
-    </button>
-
-    <button type="button" onclick="showBookSection('preface')">
-        پیشگفتار
-    </button>
-
-    <button type="button" onclick="showBookSection('contents')">
-        فهرست مطالب
-    </butt
-    <a href="yousof.pdf" target="_blank">مشاهده کتاب PDF</a>
-</div>
-
+    <!-- کتاب سوم -->
     <div class="book">
         <h3>کتاب سوم</h3>
         <p>معرفی کتاب سوم</p>
@@ -242,7 +249,6 @@ onkeyup="searchBooks()">
     </div>
 
 </div>
-
 <footer id="about">
     <p>کتابخانه الکترونیکی نورالله</p>
     <p>دانش، چراغ راه زندگی است.</p>
@@ -269,7 +275,17 @@ function searchBooks() {
 }
 
 </script>
+<script>
+function toggleBookMenu() {
+    var menu = document.getElementById("bookMenu");
 
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+</script>
 </body>
 </html>
 <h3>📖 کتاب مداحی</h3>
