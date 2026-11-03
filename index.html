@@ -216,8 +216,13 @@ onkeyup="searchBooks()">
 
     <p>مجموعه داستان‌های قرآنی و حکایت‌های عبرت‌انگیز</p>
 
+  <button type="button" onclick="toggleBookMenu()">
+    معرفی کتاب
+</button>
+
+<div id="bookMenu" style="display: none;">
     <button type="button" onclick="showBookSection('intro')">
-        معرفی کتاب
+        عنوان کتاب
     </button>
 
     <button type="button" onclick="showBookSection('preface')">
@@ -226,8 +231,7 @@ onkeyup="searchBooks()">
 
     <button type="button" onclick="showBookSection('contents')">
         فهرست مطالب
-    </button>
-
+    </butt
     <a href="yousof.pdf" target="_blank">مشاهده کتاب PDF</a>
 </div>
 
