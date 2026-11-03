@@ -163,28 +163,26 @@ footer {
     line-height: 2;
 }
 #bookMenu {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
     width: 100%;
     margin-top: 12px;
 }
 
 #bookMenu button {
-    flex: 1;
+    width: 100%;
     min-width: 0;
-    padding: 10px 5px;
+    box-sizing: border-box;
+    padding: 10px 2px;
     border: none;
     border-radius: 8px;
     background-color: #2878c8;
     color: white;
     font-family: Tahoma, sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     cursor: pointer;
-}  
+}
 </>
 </head>
 
@@ -274,13 +272,10 @@ onkeyup="searchBooks()">
     </div>
 
 </div>
+
 <footer id="about">
     <p>کتابخانه الکترونیکی نورالله</p>
     <p>دانش، چراغ راه زندگی است.</p>
-
-<footer id="about">
-<p>کتابخانه الکترونیکی نورالله</p>
-<p>دانش، چراغ راه زندگی است.</p>
 </footer>
 
 <script>
