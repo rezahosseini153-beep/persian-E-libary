@@ -162,6 +162,29 @@ footer {
     text-align: center;
     line-height: 2;
 }
+   #bookMenu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+}
+
+#bookMenu button {
+    flex: 1;
+    min-width: 75px;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2878c8;
+    color: white;
+    font-family: Tahoma, sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+} 
 </style>
 </head>
 
@@ -222,19 +245,21 @@ onkeyup="searchBooks()">
             معرفی کتاب
         </button>
 
-        <div id="bookMenu" style="display: none;">
-            <button type="button" onclick="showBookSection('intro')">
-                عنوان کتاب
-            </button>
+       <div id="bookMenu" style="display: none;">
 
-            <button type="button" onclick="showBookSection('preface')">
-                پیشگفتار
-            </button>
+    <button type="button" onclick="showBookSection('intro')">
+        عنوان کتاب
+    </button>
 
-            <button type="button" onclick="showBookSection('contents')">
-                فهرست مطالب
-            </button>
-        </div>
+    <button type="button" onclick="showBookSection('preface')">
+        پیشگفتار
+    </button>
+
+    <button type="button" onclick="showBookSection('contents')">
+        فهرست مطالب
+    </button>
+
+</div>
 
         <a href="yousof.pdf" target="_blank">
             مشاهده کتاب PDF
