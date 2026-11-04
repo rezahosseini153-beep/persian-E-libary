@@ -58,6 +58,14 @@ h2 {
     color: #17365d;
 }
 
+.books {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
 .book {
     background: white;
     display: flex;
@@ -186,7 +194,7 @@ footer {
 <input type="text"
 id="search"
 placeholder="نام کتاب را جستجو کنید..."
-onkeyup="searchBooks()">
+onkeyup="search()">
 </div>
 
 <h2 id="books">📖 کتاب‌های کتابخانه</h2>
