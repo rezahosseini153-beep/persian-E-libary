@@ -289,5 +289,202 @@ function searchBooks() {
 
 <h3>📖 کتاب یوسف</h3>
 <iframe src="yousof.pdf" width="100%" height="600" e="border:1px solid #ccc;"></iframe>
+   <!-- نمایشگر PDF کتابخانه نورالله -->
+
+<div id="reader" style="
+display:none;
+position:fixed;
+inset:0;
+z-index:9999;
+background:#f0f0f0;
+overflow:auto;
+direction:rtl;
+">
+
+    <div style="
+    background:#17365d;
+    color:white;
+    padding:12px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+    ">
+
+        <span id="readerTitle">کتابخانه نورالله</span>
+
+        <button onclick="closeBook()" style="
+        background:#bd8b35;
+        color:white;
+        border:0;
+        padding:9px 14px;
+        border-radius:6px;
+        margin-right:10px;
+        ">
+            بستن کتاب ✖
+        </button>
+
+    </div>
+
+    <div style="
+    background:white;
+    padding:12px;
+    text-align:center;
+    position:sticky;
+    top:45px;
+    z-index:5;
+    ">
+
+        <button onclick="previousPage()">صفحه قبل</button>
+
+        <span id="pageInfo">صفحه ۱</span>
+
+        <button onclick="nextPage()">صفحه بعد</button>
+
+        <button onclick="zoomOut()">−</button>
+
+        <button onclick="zoomIn()">+</button>
+
+    </div>
+
+    <p id="loading" style="text-align:center;padding:20px">
+        در حال باز کردن کتاب...
+    </p>
+
+    <div style="text-align:center;padding:10px">
+        <canvas id="pdfCanvas" style="
+        max-width:100%;
+        height:auto;
+        background:white;
+        box-shadow:0 2px 10px #aaa;
+        "></canvas>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfDoc = null;
+let pageNum = 1;
+let scale = 1.2;
+
+async function openBook(file, title) {
+
+    document.getElementById("reader").style.display = "block";
+    document.getElementById("readerTitle").innerText =
+        title || "کتابخانه نورالله";
+
+    document.getElementById("loading").innerText =
+        "در حال باز کردن کتاب...";
+
+    document.getElementById("loading").style.display = "block";
+
+    document.getElementById("pdfCanvas").style.display = "none";
+
+    document.body.style.overflow = "hidden";
+
+    try {
+
+        pdfDoc = await pdfjsLib.getDocument(file).promise;
+
+        pageNum = 1;
+        scale = 1.2;
+
+        await renderPage(pageNum);
+
+    } catch (error) {
+
+        document.getElementById("loading").innerText =
+            "خطا در باز کردن کتاب. اتصال اینترنت و نام فایل PDF را بررسی کنید.";
+
+        console.error(error);
+
+    }
+}
+
+async function renderPage(num) {
+
+    const page = await pdfDoc.getPage(num);
+
+    const canvas = document.getElementById("pdfCanvas");
+    const context = canvas.getContext("2d");
+
+    const viewport = page.getViewport({scale: scale});
+
+    const outputScale = window.devicePixelRatio || 1;
+
+    canvas.width = viewport.width * outputScale;
+    canvas.height = viewport.height * outputScale;
+
+    canvas.style.width = viewport.width + "px";
+    canvas.style.height = viewport.height + "px";
+
+    await page.render({
+        canvasContext: context,
+        viewport: viewport,
+        transform: outputScale !== 1
+            ? [outputScale, 0, 0, outputScale, 0, 0]
+            : null
+    }).promise;
+
+    document.getElementById("pageInfo").innerText =
+        "صفحه " + num + " از " + pdfDoc.numPages;
+
+    document.getElementById("loading").style.display = "none";
+    canvas.style.display = "inline-block";
+}
+
+function nextPage() {
+
+    if (pdfDoc && pageNum < pdfDoc.numPages) {
+        pageNum++;
+        renderPage(pageNum);
+    }
+
+}
+
+function previousPage() {
+
+    if (pdfDoc && pageNum > 1) {
+        pageNum--;
+        renderPage(pageNum);
+    }
+
+}
+
+function zoomIn() {
+
+    if (pdfDoc && scale < 2.5) {
+        scale += 0.2;
+        renderPage(pageNum);
+    }
+
+}
+
+function zoomOut() {
+
+    if (pdfDoc && scale > 0.6) {
+        scale -= 0.2;
+        renderPage(pageNum);
+    }
+
+}
+
+function closeBook() {
+
+    document.getElementById("reader").style.display = "none";
+
+    document.body.style.overflow = "auto";
+
+    pdfDoc = null;
+
+}
+
+</script> 
 </body>
 </html>
