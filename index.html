@@ -302,8 +302,7 @@ display:none;
 position:fixed;
 inset:0;
 z-index:9999;
-background:#eee;
-overflow:auto;
+background:#f0f0f0;
 direction:rtl;
 ">
 
@@ -312,11 +311,14 @@ direction:rtl;
     color:white;
     padding:12px;
     text-align:center;
-    position:sticky;
+    position:absolute;
     top:0;
+    right:0;
+    left:0;
     z-index:10;
 ">
         <span id="readerTitle">کتابخانه نورالله</span>
+
         <button onclick="closeBook()" style="
         background:#bd8b35;
         color:white;
@@ -324,16 +326,20 @@ direction:rtl;
         padding:9px 14px;
         border-radius:6px;
         margin-right:10px;
-        ">بستن کتاب ✖</button>
+        ">
+            بستن کتاب ✖
+        </button>
     </div>
 
     <div style="
     background:white;
     padding:10px;
     text-align:center;
-    position:sticky;
-    top:45px;
-    z-index:9;
+    position:absolute;
+    top:48px;
+    right:0;
+    left:0;
+    z-index:10;
 ">
         <button onclick="previousPage()">صفحه قبل</button>
         <span id="pageInfo">صفحه ۱</span>
@@ -342,145 +348,79 @@ direction:rtl;
         <button onclick="zoomIn()">+</button>
     </div>
 
-    <p id="loading" style="text-align:center;padding:20px">
-        در حال باز کردن کتاب...
-    </p>
-
-    <div id="pdfArea" style="text-align:center;padding:10px">
-        <canvas id="pdfCanvas" style="
-        max-width:100%;
-        height:auto;
+    <iframe
+        id="pdfFrame"
+        title="نمایش کتاب"
+        style="
+        position:absolute;
+        top:105px;
+        right:0;
+        width:100%;
+        height:calc(100% - 105px);
+        border:0;
         background:white;
-        box-shadow:0 2px 10px #aaa;
-        "></canvas>
-    </div>
+        "
+    ></iframe>
+
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+let currentPdf = "";
+let currentPage = 1;
+let currentZoom = 100;
 
-let pdfDoc = null;
-let pageNum = 1;
-let scale = 1;
-let touchStartX = 0;
-let rendering = false;
+function openBook(file, title) {
+    currentPdf = file;
+    currentPage = 1;
+    currentZoom = 100;
 
-async function openBook(file, title) {
     document.getElementById("reader").style.display = "block";
-    document.getElementById("readerTitle").innerText = title;
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("pdfCanvas").style.display = "none";
+    document.getElementById("readerTitle").innerText =
+        title || "کتابخانه نورالله";
+
+    updatePdf();
     document.body.style.overflow = "hidden";
-
-    try {
-        pdfDoc = await pdfjsLib.getDocument({
-            url: file,
-            cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/",
-            cMapPacked: true,
-            standardFontDataUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/"
-        }).promise;
-
-        pageNum = 1;
-        scale = 1;
-        await renderPage(pageNum);
-
-    } catch (error) {
-        document.getElementById("loading").innerText =
-            "خطا در باز کردن کتاب. اتصال اینترنت را بررسی کنید.";
-        console.error(error);
-    }
 }
 
-async function renderPage(num) {
-    if (!pdfDoc || rendering) return;
-    rendering = true;
+function updatePdf() {
+    document.getElementById("pdfFrame").src =
+        currentPdf + "#page=" + currentPage +
+        "&zoom=" + currentZoom;
 
-    try {
-        const page = await pdfDoc.getPage(num);
-        const canvas = document.getElementById("pdfCanvas");
-        const context = canvas.getContext("2d");
-
-        const baseViewport = page.getViewport({scale: 1});
-        const availableWidth = document.getElementById("pdfArea").clientWidth - 20;
-        const fitScale = Math.min(availableWidth / baseViewport.width, 1.5);
-
-        const viewport = page.getViewport({
-            scale: fitScale * scale
-        });
-
-        const outputScale = window.devicePixelRatio || 1;
-
-        canvas.width = viewport.width * outputScale;
-        canvas.height = viewport.height * outputScale;
-        canvas.style.width = viewport.width + "px";
-        canvas.style.height = viewport.height + "px";
-
-        await page.render({
-            canvasContext: context,
-            viewport: viewport,
-            transform: [outputScale, 0, 0, outputScale, 0, 0]
-        }).promise;
-
-        document.getElementById("pageInfo").innerText =
-            "صفحه " + num + " از " + pdfDoc.numPages;
-
-        document.getElementById("loading").style.display = "none";
-        canvas.style.display = "inline-block";
-
-    } catch (error) {
-        console.error(error);
-    } finally {
-        rendering = false;
-    }
+    document.getElementById("pageInfo").innerText =
+        "صفحه " + currentPage;
 }
 
 function nextPage() {
-    if (pdfDoc && pageNum < pdfDoc.numPages) {
-        pageNum++;
-        renderPage(pageNum);
-    }
+    currentPage++;
+    updatePdf();
 }
+
 function previousPage() {
-    if (pdfDoc && pageNum > 1) {
-        pageNum--;
-        renderPage(pageNum);
+    if (currentPage > 1) {
+        currentPage--;
+        updatePdf();
     }
 }
 
 function zoomIn() {
-    scale = Math.min(scale + 0.2, 2.5);
-    renderPage(pageNum);
+    currentZoom += 20;
+    updatePdf();
 }
 
 function zoomOut() {
-    scale = Math.max(scale - 0.2, 0.6);
-    renderPage(pageNum);
+    if (currentZoom > 40) {
+        currentZoom -= 20;
+        updatePdf();
+    }
 }
 
 function closeBook() {
     document.getElementById("reader").style.display = "none";
+    document.getElementById("pdfFrame").src = "about:blank";
     document.body.style.overflow = "auto";
-    pdfDoc = null;
 }
-
-const pdfArea = document.getElementById("pdfArea");
-
-pdfArea.addEventListener("touchstart", function(event) {
-    touchStartX = event.changedTouches[0].screenX;
-}, {passive:true});
-
-pdfArea.addEventListener("touchend", function(event) {
-    const touchEndX = event.changedTouches[0].screenX;
-    const difference = touchEndX - touchStartX;
-
-    if (Math.abs(difference) > 70) {
-        if (difference < 0) nextPage();
-        else previousPage();
-    }
-}, {passive:true});
 </script>
+
 </body>
 </html>
