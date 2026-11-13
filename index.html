@@ -295,104 +295,51 @@ function searchBooks() {
 
 <h3>📖 کتاب یوسف</h3>
 <iframe src="yousof.pdf" width="100%" height="600" e="border:1px solid #ccc;"></iframe>
-  <!-- PDF Reader کتابخانه نورالله -->
+ <!-- نمایشگر PDF کتابخانه نورالله -->
 
-<style>
-#reader {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: #f0f0f0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    direction: rtl;
-    -webkit-overflow-scrolling: touch;
-}
+<div id="reader" style="
+display:none;
+position:fixed;
+inset:0;
+z-index:9999;
+background:#f0f0f0;
+overflow:auto;
+direction:rtl;
+">
 
-#readerHeader {
-    background: #17365d;
-    color: white;
-    padding: 12px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
+    <div style="
+    background:#17365d;
+    color:white;
+    padding:12px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+    ">
 
-#readerControls {
-    background: white;
-    padding: 10px 5px;
-    text-align: center;
-    position: sticky;
-    top: 45px;
-    z-index: 5;
-}
-
-#readerControls button,
-#readerHeader button {
-    padding: 9px 12px;
-    margin: 3px;
-    border: 0;
-    border-radius: 6px;
-    background: #17365d;
-    color: white;
-    cursor: pointer;
-}
-
-#readerHeader button {
-    background: #bd8b35;
-}
-
-#pdfArea {
-    width: 100%;
-    padding: 12px 0;
-    box-sizing: border-box;
-    text-align: center;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-#pdfCanvas {
-    display: block;
-    margin: 0 auto;
-    background: white;
-    box-shadow: 0 2px 10px #aaa;
-    touch-action: pan-y;
-}
-
-@media (max-width: 600px) {
-    #readerHeader {
-        padding: 10px 4px;
-    }
-
-    #readerControls {
-        padding: 8px 2px;
-    }
-
-    #readerControls button,
-    #readerHeader button {
-        font-size: 13px;
-        padding: 9px 8px;
-    }
-
-    #pdfArea {
-        padding: 8px 0;
-    }
-}
-</style>
-
-<div id="reader">
-
-    <div id="readerHeader">
         <span id="readerTitle">کتابخانه نورالله</span>
 
-        <button onclick="closeBook()">
+        <button onclick="closeBook()" style="
+        background:#bd8b35;
+        color:white;
+        border:0;
+        padding:9px 14px;
+        border-radius:6px;
+        margin-right:10px;
+        ">
             بستن کتاب ✖
         </button>
+
     </div>
 
-    <div id="readerControls">
+    <div style="
+    background:white;
+    padding:12px;
+    text-align:center;
+    position:sticky;
+    top:45px;
+    z-index:5;
+    ">
 
         <button onclick="previousPage()">صفحه قبل</button>
 
@@ -410,8 +357,13 @@ function searchBooks() {
         در حال باز کردن کتاب...
     </p>
 
-    <div id="pdfArea">
-        <canvas id="pdfCanvas"></canvas>
+    <div style="text-align:center;padding:10px">
+        <canvas id="pdfCanvas" style="
+        max-width:100%;
+        height:auto;
+        background:white;
+        box-shadow:0 2px 10px #aaa;
+        "></canvas>
     </div>
 
 </div>
@@ -423,25 +375,13 @@ function searchBooks() {
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-const pdfOptions = {
-    cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/",
-    cMapPacked: true,
-    standardFontDataUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/",
-    useSystemFonts: true
-};
-
 let pdfDoc = null;
-let pdfLoadingTask = null;
 let pageNum = 1;
-let zoomLevel = 1;
-let renderTask = null;
-let renderToken = 0;
-
+let scale = 1.2;
 
 async function openBook(file, title) {
 
     document.getElementById("reader").style.display = "block";
-
     document.getElementById("readerTitle").innerText =
         title || "کتابخانه نورالله";
 
@@ -454,266 +394,103 @@ async function openBook(file, title) {
 
     document.body.style.overflow = "hidden";
 
-    renderToken++;
-
-    if (renderTask) {
-        try {
-            renderTask.cancel();
-        } catch (e) {}
-        renderTask = null;
-    }
-
     try {
 
-        if (pdfDoc) {
-            await pdfDoc.destroy();
-            pdfDoc = null;
-        }
-
-        if (pdfLoadingTask) {
-            await pdfLoadingTask.destroy();
-            pdfLoadingTask = null;
-        }
-
-        const loadingTask = pdfjsLib.getDocument({
-            url: file,
-            ...pdfOptions
-        });
-
-        pdfLoadingTask = loadingTask;
-
-        const loadedPdf = await loadingTask.promise;
-
-        if (pdfLoadingTask !== loadingTask) {
-            await loadedPdf.destroy();
-            return;
-        }
-
-        pdfDoc = loadedPdf;
-        pdfLoadingTask = null;
+        pdfDoc = await pdfjsLib.getDocument(file).promise;
 
         pageNum = 1;
-        zoomLevel = 1;
+        scale = 1.2;
 
         await renderPage(pageNum);
 
     } catch (error) {
-document.getElementById("loading").innerText =
-            "خطا در باز کردن کتاب. لطفاً دوباره تلاش کنید.";
+
+        document.getElementById("loading").innerText =
+            "خطا در باز کردن کتاب. اتصال اینترنت و نام فایل PDF را بررسی کنید.";
 
         console.error(error);
 
     }
 }
 
-
 async function renderPage(num) {
 
-    if (!pdfDoc) return;
+    const page = await pdfDoc.getPage(num);
 
-    const currentDoc = pdfDoc;
-    const currentToken = ++renderToken;
+    const canvas = document.getElementById("pdfCanvas");
+    const context = canvas.getContext("2d");
 
-    if (renderTask) {
-        try {
-            renderTask.cancel();
-        } catch (e) {}
-        renderTask = null;
-    }
+    const viewport = page.getViewport({scale: scale});
 
-    try {
+    const outputScale = window.devicePixelRatio || 1;
 
-        const page = await currentDoc.getPage(num);
+    canvas.width = viewport.width * outputScale;
+    canvas.height = viewport.height * outputScale;
 
-        if (
-            currentDoc !== pdfDoc ||
-            currentToken !== renderToken
-        ) {
-            return;
-        }
+    canvas.style.width = viewport.width + "px";
+    canvas.style.height = viewport.height + "px";
 
-        const canvas = document.getElementById("pdfCanvas");
-        const context = canvas.getContext("2d");
+    await page.render({
+        canvasContext: context,
+        viewport: viewport,
+        transform: outputScale !== 1
+            ? [outputScale, 0, 0, outputScale, 0, 0]
+            : null
+    }).promise;
 
-        const baseViewport = page.getViewport({
-            scale: 1
-        });
+    document.getElementById("pageInfo").innerText =
+        "صفحه " + num + " از " + pdfDoc.numPages;
 
-        const availableWidth = Math.max(
-            100,
-            document.getElementById("pdfArea").clientWidth - 24
-        );
-
-        const fitScale = availableWidth / baseViewport.width;
-
-        const finalScale = fitScale * zoomLevel;
-
-        const viewport = page.getViewport({
-            scale: finalScale
-        });
-
-        const outputScale = window.devicePixelRatio || 1;
-
-        canvas.width = Math.floor(viewport.width * outputScale);
-        canvas.height = Math.floor(viewport.height * outputScale);
-
-        canvas.style.width = viewport.width + "px";
-        canvas.style.height = viewport.height + "px";
-
-        const task = page.render({
-            canvasContext: context,
-            viewport: viewport,
-            transform: [
-                outputScale, 0, 0,
-                outputScale, 0, 0
-            ]
-        });
-
-        renderTask = task;
-
-        await task.promise;
-
-        if (renderTask === task) {
-            renderTask = null;
-        }
-
-        if (
-            currentDoc !== pdfDoc ||
-            currentToken !== renderToken
-        ) {
-            return;
-        }
-
-        document.getElementById("pageInfo").innerText =
-            "صفحه " + num + " از " + pdfDoc.numPages;
-
-        document.getElementById("loading").style.display = "none";
-
-        canvas.style.display = "block";
-
-    } catch (error) {
-
-        if (error.name !== "RenderingCancelledException") {
-            console.error(error);
-        }
-
-    }
+    document.getElementById("loading").style.display = "none";
+    canvas.style.display = "inline-block";
 }
 
-
-async function nextPage() {
+function nextPage() {
 
     if (pdfDoc && pageNum < pdfDoc.numPages) {
         pageNum++;
-        await renderPage(pageNum);
+        renderPage(pageNum);
     }
 
 }
 
-
-async function previousPage() {
+function previousPage() {
 
     if (pdfDoc && pageNum > 1) {
         pageNum--;
-        await renderPage(pageNum);
+        renderPage(pageNum);
     }
 
 }
 
+function zoomIn() {
 
-async function zoomIn() {
-
-    if (pdfDoc && zoomLevel < 2.5) {
-        zoomLevel += 0.2;
-        await renderPage(pageNum);
+    if (pdfDoc && scale < 2.5) {
+        scale += 0.2;
+        renderPage(pageNum);
     }
 
 }
 
+function zoomOut() {
 
-async function zoomOut() {
-
-    if (pdfDoc && zoomLevel > 0.6) {
-        zoomLevel -= 0.2;
-        await renderPage(pageNum);
+    if (pdfDoc && scale > 0.6) {
+        scale -= 0.2;
+        renderPage(pageNum);
     }
 
 }
 
-
-async function closeBook() {
-
-    renderToken++;
-
-    if (renderTask) {
-        try {
-            renderTask.cancel();
-        } catch (e) {}
-        renderTask = null;
-    }
+function closeBook() {
 
     document.getElementById("reader").style.display = "none";
 
     document.body.style.overflow = "auto";
 
-    if (pdfDoc) {
-        const oldDoc = pdfDoc;
-        pdfDoc = null;
-
-        try {
-            await oldDoc.destroy();
-        } catch (e) {}
-    }
-
-    if (pdfLoadingTask) {
-        const oldTask = pdfLoadingTask;
-        pdfLoadingTask = null;
-
-        try {
-            await oldTask.destroy();
-        } catch (e) {}
-    }
+    pdfDoc = null;
 
 }
 
-
-// ورق زدن با حرکت انگشت
-
-let touchStartX = 0;
-let touchStartY = 0;
-
-const pdfCanvas = document.getElementById("pdfCanvas");
-
-pdfCanvas.addEventListener("touchstart", function(event) {
-
-    touchStartX = event.changedTouches[0].screenX;
-    touchStartY = event.changedTouches[0].screenY;
-
-}, { passive: true });
-
-
-pdfCanvas.addEventListener("touchend", function(event) {
-
-    const endX = event.changedTouches[0].screenX;
-    const endY = event.changedTouches[0].screenY;
-
-    const differenceX = endX - touchStartX;
-    const differenceY = endY - touchStartY;
-if (
-        Math.abs(differenceX) > 60 &&
-        Math.abs(differenceX) > Math.abs(differenceY) * 1.3
-    ) {
-
-        if (differenceX < 0) {
-            nextPage();
-        } else {
-            previousPage();
-        }
-
-    }
-
-}, { passive: true });
-
-</script>
+</script> 
 </body>
 </html>
