@@ -57,14 +57,16 @@ h2 {
     text-align: center;
     color: #17365d;
 }
-
 .books {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
     gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
 }
 .book {
     background: white;
