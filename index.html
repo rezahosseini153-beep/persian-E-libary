@@ -363,31 +363,22 @@ direction:rtl;
         <button onclick="zoomIn()">+</button>
     </div>
 
-    <div
+<iframe
     id="pdfFrame"
+    title="نمایش کتاب"
     style="
     position:absolute;
     top:105px;
     right:0;
-    left:0;
     width:100%;
     height:calc(100% - 105px);
-    overflow:auto;
-    background:#eeeeee;
-    padding:12px;
-    box-sizing:border-box;
+    border:0;
+    background:white;
     "
-></div>
+></iframe>
 
 </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.min.js"></script>
-
-<script>
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-"https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js";
-</script>
-    
+     
 <script>
 let currentPdf = "";
 let currentPage = 1;
