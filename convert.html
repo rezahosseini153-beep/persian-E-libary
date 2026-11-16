@@ -1,1 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تبدیل کتاب نورالله به تصویر</title>
 
+<style>
+body {
+  font-family: Tahoma, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background: #f3f5f8;
+}
+button {
+  padding: 13px 20px;
+  margin: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #17365d;
+  color: white;
+  font-size: 16px;
+}
+canvas {
+  max-width: 100%;
+  height: auto;
+  background: white;
+  box-shadow: 0 2px 8px #aaa;
+}
+#status {
+  margin: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>تبدیل کتاب نغمه‌های عاشقان</h2>
+
+<p>ابتدا صفحهٔ اول را آزمایش کن.</p>
+
+<button onclick="testPage()">آزمایش صفحهٔ اول</button>
+<button onclick="convertAll()">تبدیل همهٔ صفحات به ZIP</button>
+
+<div id="status">آماده</div>
+<canvas id="preview"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const PDF_URL = "naghmeh-asheghan.pdf";
+
+let pdf = null;
+
+async function loadPDF() {
+  if (!pdf) {
+    document.getElementById("status").innerText =
+      "در حال بازکردن کتاب...";
+
+    const task = pdfjsLib.getDocument(PDF_URL);
+    pdf = await task.promise;
+  }
+  return pdf;
+}
+
+async function renderPage(number) {
+  const page = await pdf.getPage(number);
+
+  const scale = 1.5;
+  const viewport = page.getViewport({ scale });
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  canvas.width = Math.floor(viewport.width);
+  canvas.height = Math.floor(viewport.height);
+
+  await page.render({
+    canvasContext: context,
+    viewport: viewport
+  }).promise;
+
+  return canvas;
+}
+
+async function testPage() {
+  try {
+    await loadPDF();
+
+    const canvas = await renderPage(1);
+    const preview = document.getElementById("preview");
+
+    preview.width = canvas.width;
+    preview.height = canvas.height;
+
+    preview.getContext("2d").drawImage(canvas, 0, 0);
+
+    document.getElementById("status").innerText =
+      "صفحهٔ اول آماده است. نوشته‌های فارسی را بررسی کن.";
+  } catch (error) {
+    document.getElementById("status").innerText =
+      "خطا: " + error.message;
+  }
+}
+
+async function convertAll() {
+  try {
+    await loadPDF();
+
+    const zip = new JSZip();
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      document.getElementById("status").innerText =
+        "در حال تبدیل صفحهٔ " + i + " از " + pdf.numPages;
+
+      const canvas = await renderPage(i);
+
+      const blob = await new Promise(resolve =>
+        canvas.toBlob(resolve, "image/png")
+      );
+
+      if (!blob) throw new Error("ساخت تصویر ناموفق بود.");
+
+      const name = "page-" + String(i).padStart(3, "0") + ".png";
+      zip.file(name, blob);
+
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+
+    document.getElementById("status").innerText =
+      "در حال ساخت فایل ZIP...";
+
+    const result = await zip.generateAsync({ type: "blob" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(result);
+    link.download = "naghmeh-pages.zip";
+    link.click();
+
+    document.getElementById("status").innerText =
+      "تبدیل تمام شد.";
+  } catch (error) {
+    document.getElementById("status").innerText =
+      "خطا: " + error.message;
+  }
+}
+</script>
+
+</body>
+</html>
