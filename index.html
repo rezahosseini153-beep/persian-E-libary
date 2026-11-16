@@ -436,6 +436,70 @@ function closeBook() {
     document.body.style.overflow = "auto";
 }
 </script>
+<style>
+#chromeNotice {
+    display: none;
+    direction: rtl;
+    text-align: center;
+    background: #eaf2ff;
+    color: #17365d;
+    padding: 16px;
+    margin: 15px;
+    border-radius: 12px;
+    font-family: Tahoma, sans-serif;
+    line-height: 2;
+}
 
+#chromeNotice button {
+    background: #17365d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: 15px;
+    cursor: pointer;
+}
+</style>
+
+<div id="chromeNotice">
+    <p>
+        برای تجربه بهتر مطالعه کتاب‌ها،
+        پیشنهاد می‌کنیم کتابخانه را با Google Chrome باز کنید.
+    </p>
+
+    <button onclick="openInChrome()">
+        باز کردن در Google Chrome
+    </button>
+</div>
+
+<script>
+(function () {
+    const ua = navigator.userAgent;
+
+    const isAndroid = /Android/i.test(ua);
+
+    const isChrome =
+        /Chrome\/\d+/i.test(ua) &&
+        !/SamsungBrowser|EdgA|OPR|Firefox/i.test(ua);
+
+    if (isAndroid && !isChrome) {
+        document.getElementById("chromeNotice").style.display = "block";
+    }
+})();
+
+function openInChrome() {
+    const url = "https://rezahosseini153-beep.github.io/persian-E-libary/";
+
+    const intentUrl =
+        "intent://rezahosseini153-beep.github.io/persian-E-libary/#Intent;" +
+        "scheme=https;" +
+        "package=com.android.chrome;" +
+        "S.browser_fallback_url=" + encodeURIComponent(url) +
+        ";end";
+
+    window.location.href = intentUrl;
+}
+</script>
+    
 </body>
 </html>
