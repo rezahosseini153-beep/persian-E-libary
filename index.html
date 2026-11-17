@@ -178,19 +178,27 @@ overflow: hidden;
 position: relative;
 }
 
-.book-third-cover img {
-width: 200%;
-height: 100%;
-max-width: none;
-object-fit: fill;
-display: block;
-position: absolute;
-right: 0;
-top: 0;
-}.book-3d:hover .book-cover {
-transform: rotateY(-30deg) scale(1.04);
+.book-third-cover {
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    position: relative;
 }
 
+.book-third-cover img {
+    width: 200%;
+    height: 100%;
+    max-width: none;
+    object-fit: fill;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.book-3d:hover .book-cover {
+    transform: rotateY(-30deg) scale(1.04);
+}
 .cover-title {
 font-size: 21px;
 font-weight: bold;
