@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://rezahosseini153-beep.github.io/persian-E-libary/</loc>
   </url>
+
   <url>
     <loc>https://rezahosseini153-beep.github.io/persian-E-libary/naghmeh-asheghan.html</loc>
   </url>
+
   <url>
-    <loc>https://rezahosseini153-beep.github.io/persian-E-libary/noorollah.html</loc>
+    <loc>https://rezahosseini153-beep.github.io/persian-E-libary/manzoomeh-ghesas.html</loc>
   </url>
+
   <url>
-    <loc>https://rezahosseini153-beep.github.io/persian-E-libary/doa-nodbe.pdf</loc>
+    <loc>https://rezahosseini153-beep.github.io/persian-E-libary/doa-nodbe.html</loc>
   </url>
+
 </urlset>
