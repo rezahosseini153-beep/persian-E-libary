@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>نغمه‌های عاشقان اهل‌بیت</title>
+<title>نغمه‌های عاشقان اهل‌بیت | کتابخانه الکترونیکی نورالله</title>
 
 <style>
 body {
@@ -32,37 +32,33 @@ main {
     padding: 15px;
 }
 
-.book-cover {
-    background: #245b45;
-    color: #fff;
-    width: 230px;
-    min-height: 300px;
-    margin: 25px auto;
-    padding: 25px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 6px solid #c5a45c;
-    line-height: 2;
-    font-size: 21px;
-}
-
-a {
+a, button {
     display: inline-block;
     background: #245b45;
     color: white;
     padding: 13px 25px;
     text-decoration: none;
+    border: none;
     border-radius: 7px;
     margin: 15px;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 15px;
+    cursor: pointer;
 }
 
-iframe {
+.book-reader {
+    display: none;
     width: 100%;
     height: 700px;
     border: 1px solid #ccc;
     background: white;
+    margin-top: 25px;
+}
+
+.book-reader iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }
 
 footer {
@@ -75,15 +71,17 @@ footer {
 <body>
 
 <header>
-<h1>نغمه‌های عاشقان اهل‌بیت علیهم‌السلام</h1>
-<p>کتابخانه الکترونیکی نورالله</p>
+    <h1>نغمه‌های عاشقان اهل‌بیت علیهم‌السلام</h1>
+    <p>کتابخانه الکترونیکی نورالله</p>
 </header>
 
 <main>
 
-<img src="https://github.com/rezahosseini153-beep/persian-E-libary/blob/main/naghmeh-cover.png?raw=true"
-alt="جلد کتاب نغمه‌های عاشقان اهل بیت علیهم السلام"
-style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;">
+<img
+src="https://github.com/rezahosseini153-beep/persian-E-libary/blob/main/naghmeh-cover.png?raw=true"
+alt="جلد کتاب نغمه‌های عاشقان اهل‌بیت علیهم‌السلام"
+style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;"
+>
 
 <h2>درباره کتاب</h2>
 
@@ -114,7 +112,6 @@ style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;
 شهادت و ولادت چهارده معصوم علیهم‌السلام را در بر می‌گیرد.
 </p>
 
-<p>
 <h2>زندگی‌نامه نویسنده</h2>
 
 <p>
@@ -132,10 +129,20 @@ style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;
 <p>
 <strong>وفات:</strong> ۱۵ اردیبهشت ۱۴۰۵ هجری شمسی، دیباج
 </p>
-</p>
-<a href="naghmeh-asheghan.pdf" target="_blank">
-مشاهده و دریافت کتاب
-</a>
+
+<h2>مطالعه آنلاین کتاب</h2>
+
+<button onclick="showBook()">
+مشاهده آنلاین کتاب
+</button>
+
+<div class="book-reader" id="bookReader">
+    <iframe
+        id="bookFrame"
+        title="مطالعه آنلاین کتاب نواهای عاشقان اهل‌بیت"
+        loading="lazy">
+    </iframe>
+</div>
 
 <a href="index.html">
 بازگشت به کتابخانه
@@ -146,6 +153,24 @@ style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;
 <footer>
 کتابخانه الکترونیکی نورالله
 </footer>
+
+<script>
+function showBook() {
+    var reader = document.getElementById("bookReader");
+    var frame = document.getElementById("bookFrame");
+
+    reader.style.display = "block";
+
+    if (!frame.src) {
+        frame.src = "naghmeh-asheghan.pdf#toolbar=0&navpanes=0";
+    }
+
+    reader.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+</script>
 
 </body>
 </html>
