@@ -1,1 +1,174 @@
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مطالعه منظومه قصص قرآنی | کتابخانه الکترونیکی نورالله</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #eeeae2;
+    font-family: Tahoma, sans-serif;
+    text-align: center;
+}
+
+header {
+    background: #17365d;
+    color: white;
+    padding: 16px;
+    font-size: 18px;
+}
+
+.toolbar {
+    padding: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+button {
+    background: #17365d;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+#pageInfo {
+    padding: 10px;
+    color: #333;
+}
+
+#bookPage {
+    display: block;
+    max-width: 95%;
+    height: auto;
+    max-height: 78vh;
+    margin: 0 auto 25px;
+    box-shadow: 0 3px 14px #999;
+    background: white;
+}
+
+#message {
+    padding: 25px;
+    color: #8b2d2d;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+کتابخانه الکترونیکی نورالله
+<br>
+مطالعه کتاب منظومه قصص قرآنی
+</header>
+
+<div class="toolbar">
+<button id="prev" disabled>صفحه قبل</button>
+<button id="next">صفحه بعد</button>
+</div>
+
+<div id="pageInfo">در حال بارگذاری کتاب...</div>
+
+<canvas id="bookPage"></canvas>
+
+<div id="message"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+const PDF_FILE = "yousof.pdf";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfDoc = null;
+let pageNum = 1;
+
+const canvas = document.getElementById("bookPage");
+const ctx = canvas.getContext("2d");
+
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const pageInfo = document.getElementById("pageInfo");
+const message = document.getElementById("message");
+
+async function renderPage(number) {
+    try {
+        const page = await pdfDoc.getPage(number);
+
+        const originalViewport = page.getViewport({ scale: 1 });
+
+        const availableWidth = Math.min(
+            window.innerWidth * 0.95,
+            900
+        );
+
+        const scale = Math.min(
+            availableWidth / originalViewport.width,
+            2
+        );
+
+        const viewport = page.getViewport({ scale });
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+            canvasContext: ctx,
+            viewport: viewport
+        }).promise;
+
+        pageInfo.textContent =
+            "صفحه " + number + " از " + pdfDoc.numPages;
+
+        prevBtn.disabled = number <= 1;
+        nextBtn.disabled = number >= pdfDoc.numPages;
+
+    } catch (error) {
+        message.textContent = "خطا در نمایش صفحه کتاب.";
+        console.error(error);
+    }
+}
+
+prevBtn.addEventListener("click", () => {
+    if (pageNum > 1) {
+        pageNum--;
+        renderPage(pageNum);
+    }
+});
+
+nextBtn.addEventListener("click", () => {
+    if (pageNum < pdfDoc.numPages) {
+        pageNum++;
+        renderPage(pageNum);
+    }
+});
+
+pdfjsLib.getDocument(PDF_FILE).promise.then(pdf => {
+    pdfDoc = pdf;
+    renderPage(pageNum);
+}).catch(error => {
+    pageInfo.textContent = "";
+    message.textContent = "بارگذاری کتاب با مشکل روبه‌رو شد.";
+    console.error(error);
+});
+</script>
+
+</body>
+</html>
