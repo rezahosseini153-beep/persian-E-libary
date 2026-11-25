@@ -13,6 +13,7 @@ body {
     background: #f7f3e9;
     color: #333;
     text-align: center;
+    line-height: 2.2;
 }
 
 header {
@@ -32,33 +33,16 @@ main {
     padding: 15px;
 }
 
-a, button {
+a {
     display: inline-block;
     background: #245b45;
     color: white;
     padding: 13px 25px;
     text-decoration: none;
-    border: none;
     border-radius: 7px;
     margin: 15px;
     font-family: Tahoma, Arial, sans-serif;
     font-size: 15px;
-    cursor: pointer;
-}
-
-.book-reader {
-    display: none;
-    width: 100%;
-    height: 700px;
-    border: 1px solid #ccc;
-    background: white;
-    margin-top: 25px;
-}
-
-.book-reader iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
 }
 
 footer {
@@ -114,35 +98,19 @@ style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;
 
 <h2>زندگی‌نامه نویسنده</h2>
 
-<p>
-<strong>نام:</strong> سید نورالله شنایی دیباجی
-</p>
+<p><strong>نام:</strong> سید نورالله شنایی دیباجی</p>
 
-<p>
-<strong>زادگاه:</strong> دیباج
-</p>
+<p><strong>زادگاه:</strong> دیباج</p>
 
-<p>
-<strong>ولادت:</strong> ۱۹ مهرماه ۱۳۱۹ هجری شمسی، دیباج
-</p>
+<p><strong>ولادت:</strong> ۱۹ مهرماه ۱۳۱۹ هجری شمسی، دیباج</p>
 
-<p>
-<strong>وفات:</strong> ۱۵ اردیبهشت ۱۴۰۵ هجری شمسی، دیباج
-</p>
+<p><strong>وفات:</strong> ۱۵ اردیبهشت ۱۴۰۵ هجری شمسی، دیباج</p>
 
-<h2>مطالعه آنلاین کتاب</h2>
+<br>
 
-<button onclick="showBook()">
-مشاهده آنلاین کتاب
-</button>
-
-<div class="book-reader" id="bookReader">
-    <iframe
-        id="bookFrame"
-        title="مطالعه آنلاین کتاب نواهای عاشقان اهل‌بیت"
-        loading="lazy">
-    </iframe>
-</div>
+<a href="naghmeh-asheghan.pdf" target="_blank">
+مشاهده و دریافت کتاب
+</a>
 
 <a href="index.html">
 بازگشت به کتابخانه
@@ -153,24 +121,6 @@ style="width:280px; max-width:90%; height:auto; display:block; margin:25px auto;
 <footer>
 کتابخانه الکترونیکی نورالله
 </footer>
-
-<script>
-function showBook() {
-    var reader = document.getElementById("bookReader");
-    var frame = document.getElementById("bookFrame");
-
-    reader.style.display = "block";
-
-    if (!frame.src) {
-        frame.src = "naghmeh-asheghan.pdf#toolbar=0&navpanes=0";
-    }
-
-    reader.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-}
-</script>
 
 </body>
 </html>
